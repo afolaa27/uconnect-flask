@@ -5,24 +5,20 @@ from peewee import *
 
 from flask_login import UserMixin
 
+DATABASE = SqliteDatabase('uconnect.sqlite')
 
 
-
-DATABASE = SqliteDatabase('users.sqlite')
-
-
-class User(UserMixin,Model):
+class User(UserMixin, Model):
 	username = CharField(unique=True)
 	latitude = DecimalField()
 	longitude = DecimalField()
 	age = IntegerField()
 	email = CharField(unique=True)
 	password = CharField()
-	radius = IntegerField()
 	school = CharField()
 
-	class meta:
-		databse = DATABASE
+	class Meta:
+		database = DATABASE
 
 
 
@@ -35,17 +31,16 @@ class Book(Model):
 	favorite = BooleanField()
 	owner = ForeignKeyField(User, backref='Books')
 
-	class meta:
-		databse = DATABASE
+	class Meta:
+		database = DATABASE
 
 
 class Favorite(Model):
-	
 	UserId = ForeignKeyField(User, backref='Favorite')
 	Book_Id =ForeignKeyField(Book, backref='Favorite')
 
-	class meta:
-		databse = DATABASE
+	class Meta:
+		database = DATABASE
 
 def initialize():
 	DATABASE.connect()
