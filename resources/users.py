@@ -47,8 +47,15 @@ def login():
 		if check_password:
 			login_user(user)
 			user_dict.pop('password')
-			user_dict.pop('latitude')
-			user_dict.pop('longitude')
+
+
+			# print(user_dict['latitude'])
+			# print(type(user_dict['latitude']))
+			# user_dict.pop('latitude')
+			# user_dict.pop('longitude')
+			user_dict['latitude']=str(user_dict['latitude'])
+			user_dict['longitude']=str(user_dict['longitude'])
+			print(type(user_dict['longitude']))
 			return jsonify(
 				data=user_dict,
 				message='logged in',
