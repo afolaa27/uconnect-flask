@@ -30,6 +30,7 @@ class Book(Model):
 	Sold = BooleanField(default=False)
 	price = IntegerField()
 	owner = ForeignKeyField(User, backref='Books', on_delete='CASCADE')
+	image = BinaryUUIDField()
 
 	class Meta:
 		database = DATABASE
@@ -42,10 +43,20 @@ class Favorite(Model):
 	class Meta:
 		database = DATABASE
 
+class Notification(Model):
+	Seller_id = ForeignKeyField(User, backref='Notification',on_delete='CASCADE')
+	Book_id = ForeignKeyField(Book, backref='Notification',on_delete='CASCADE')
+	Buyer_id = ForeignKeyField(User, backref='Notification',on_delete='CASCADE')
+	status = BooleanField(null=True)
+	message = CharField(null=False)
+
+	class Meta:
+		database = DATABASE
+
 def initialize():
 	DATABASE.connect()
 
-	DATABASE.create_tables([User, Book, Favorite], safe=True)
+	DATABASE.create_tables([User, Book, Favorite, Notification], safe=True)
 	print('connected and printed tables')
 
 
