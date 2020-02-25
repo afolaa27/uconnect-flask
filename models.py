@@ -24,8 +24,8 @@ class User(UserMixin, Model):
 class Image(Model):
 	filename = TextField()
 	data=BlobField()
-	owner = ForeignKeyField(User, backref='Books', on_delete='CASCADE')
 	
+
 	class Meta:
 		database = DATABASE
 

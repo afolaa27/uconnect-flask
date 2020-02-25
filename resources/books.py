@@ -21,10 +21,13 @@ def create_book():
 
 	image = models.Image.create(
 		filename=payload['filename'],
-		data=payload['data']
+		data=payload['data'],
+		
 		)
 
 	image_dict = model_to_dict(image)
+	
+	
 	
 
 	book = models.Book.create(
@@ -107,7 +110,9 @@ def update_book(id):
 		return jsonify(
 			data={
 				'error': 'Forbidden'
-			}, message='cant updated book', status=403),403
+			}, 
+			message='cant updated book', 
+			status=403),403
 
 #delete one book route
 @books.route('/<id>', methods=['Delete'])
@@ -124,3 +129,25 @@ def delete_book(id):
 			data={
 				'error': 'Forbidden'
 			}, message='cant delete book', status=403),403
+
+#searches based on user choice of search either ISBN, Title, Price, school
+@books.route('/search', methods=['GET'])
+def search_book():
+	query = models.Book.select()
+	payload = request.get_json()
+
+	if payload['choice'] == 'ISBN':
+		isbn = payload['search']
+		for book in query.where(models.Book.ISBN ==isbn):
+			print(book.title)
+	elif payload['choice'] == 'title':
+		title =payload['search']
+		for book in query.where(models.Book.title == title):
+			print(book.price)
+	elif payload['choice'] == 'price':
+		price =payload['search']
+		for book in query.where(models.Book.price == price):
+			print(book.description)
+	return jsonify(
+		data={})
+
