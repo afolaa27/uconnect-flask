@@ -5,7 +5,7 @@ from peewee import *
 
 from flask_login import UserMixin
 
-DATABASE = SqliteDatabase('uconnect.sqlite')
+DATABASE = SqliteDatabase('uconnect.sqlite', pragmas={'foreign_keys': 1})
 
 
 class User(UserMixin, Model):
@@ -16,10 +16,10 @@ class User(UserMixin, Model):
 	email = CharField(unique=True)
 	password = CharField()
 	school = CharField()
+	
 
 	class Meta:
 		database = DATABASE
-
 
 
 class Book(Model):
@@ -27,16 +27,16 @@ class Book(Model):
 	ISBN = CharField()
 	description = TextField()
 	created_date = DateTimeField(default=datetime.datetime.now)
-	Sold = BooleanField()
-	favorite = BooleanField()
-	owner = ForeignKeyField(User, backref='Books')
+	Sold = BooleanField(default=False)
+	price = IntegerField()
+	owner = ForeignKeyField(User, backref='Books', on_delete='CASCADE')
 
 	class Meta:
 		database = DATABASE
 
 
 class Favorite(Model):
-	UserId = ForeignKeyField(User, backref='Favorite')
+	User_id = ForeignKeyField(User, backref='Favorite',on_delete='CASCADE')
 	Book_Id =ForeignKeyField(Book, backref='Favorite')
 
 	class Meta:

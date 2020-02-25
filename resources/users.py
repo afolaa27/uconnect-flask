@@ -48,11 +48,6 @@ def login():
 			login_user(user)
 			user_dict.pop('password')
 
-
-			# print(user_dict['latitude'])
-			# print(type(user_dict['latitude']))
-			# user_dict.pop('latitude')
-			# user_dict.pop('longitude')
 			user_dict['latitude']=str(user_dict['latitude'])
 			user_dict['longitude']=str(user_dict['longitude'])
 			print(type(user_dict['longitude']))
@@ -94,4 +89,22 @@ def logout():
 		data={},
 		message="Youve been logged out",
 		status=200),200
+
+@users.route('/delete', methods=['Delete'])
+def delete_user():
+
+	# user_to_dict = model_to_dict(current_user)
+	# print(user_to_dict)
+	user_to_delete = models.User.get_by_id(current_user.id)
+	user_to_delete.delete_instance()
+
+	return jsonify(
+			data={},
+			message="Deleted Your account",
+			status=200),200
+
+
+
+
+
 
