@@ -92,12 +92,13 @@ def update_book(id):
 			book.description = payload['description']
 		book.save()
 		book_dict = model_to_dict(book)
-		print(book_dict)
+	
+
 		book_dict["image"].pop('data')
 		book_dict["owner"].pop('latitude')
 		book_dict["owner"].pop('longitude')
 		book_dict["owner"].pop('password')
-		
+
 		return jsonify(
 			data=book_dict,
 			message='You updated your book',
@@ -108,3 +109,18 @@ def update_book(id):
 				'error': 'Forbidden'
 			}, message='cant updated book', status=403),403
 
+#delete one book route
+@books.route('/<id>', methods=['Delete'])
+def delete_book(id):
+	book_to_delete = models.Book.get_by_id(id)
+	if current_user.id == book_to_delete.id:
+		book_to_delete.delete_instance()
+
+		return jsonify(data={}, 
+			message='Deleted book', 
+			status=200),200
+	else:
+		return jsonify(
+			data={
+				'error': 'Forbidden'
+			}, message='cant delete book', status=403),403
