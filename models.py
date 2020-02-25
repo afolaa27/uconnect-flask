@@ -21,6 +21,12 @@ class User(UserMixin, Model):
 	class Meta:
 		database = DATABASE
 
+class Image(Model):
+	filename = TextField()
+	data=BlobField()
+	
+	class Meta:
+		database = DATABASE
 
 class Book(Model):
 	title = CharField()
@@ -30,11 +36,11 @@ class Book(Model):
 	Sold = BooleanField(default=False)
 	price = IntegerField()
 	owner = ForeignKeyField(User, backref='Books', on_delete='CASCADE')
-	image = BinaryUUIDField()
+	image=ForeignKeyField(Image, backref='Books',on_delete='CASCADE')
+	
 
 	class Meta:
 		database = DATABASE
-
 
 class Favorite(Model):
 	User_id = ForeignKeyField(User, backref='Favorite',on_delete='CASCADE')
@@ -56,7 +62,7 @@ class Notification(Model):
 def initialize():
 	DATABASE.connect()
 
-	DATABASE.create_tables([User, Book, Favorite, Notification], safe=True)
+	DATABASE.create_tables([User, Book, Favorite, Notification, Image], safe=True)
 	print('connected and printed tables')
 
 

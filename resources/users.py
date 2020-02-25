@@ -7,7 +7,7 @@ from playhouse.shortcuts import model_to_dict
 
 users= Blueprint('users', 'users')
 
-
+#sign up route 
 @users.route('/register', methods=['POST'])
 def register_user():
 	payload = request.get_json()
@@ -36,6 +36,7 @@ def register_user():
 		status=201),201
 
 
+#login route
 @users.route('/login', methods=['POST'])
 def login(): 
 	payload = request.get_json()
@@ -64,6 +65,7 @@ def login():
 			status=401),401
 
 
+#check who is logged in route
 @users.route('loggedin', methods=['GET'])
 def get_logged_in_user():
 	if not current_user.is_authenticated:
@@ -82,6 +84,7 @@ def get_logged_in_user():
 			message='this is the current logged in user',
 			status=200),200
 
+#logout route
 @users.route('logout', methods=['GET'])
 def logout():
 	logout_user()
@@ -90,6 +93,8 @@ def logout():
 		message="Youve been logged out",
 		status=200),200
 
+
+#delete user and all ref route
 @users.route('/delete', methods=['Delete'])
 def delete_user():
 
