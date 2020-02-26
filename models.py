@@ -45,7 +45,7 @@ class Book(Model):
 
 class Favorite(Model):
 	User_id = ForeignKeyField(User, backref='Favorite',on_delete='CASCADE')
-	Book_Id =ForeignKeyField(Book, backref='Favorite')
+	Book_Id =ForeignKeyField(Book, backref='Favorite', on_delete='CASCADE')
 
 	class Meta:
 		database = DATABASE

@@ -134,7 +134,7 @@ def update_book(id):
 @books.route('/<id>', methods=['Delete'])
 def delete_book(id):
 	book_to_delete = models.Book.get_by_id(id)
-	if current_user.id == book_to_delete.id:
+	if current_user.id == book_to_delete.owner.id:
 		book_to_delete.delete_instance()
 
 		return jsonify(data={}, 

@@ -51,3 +51,24 @@ def create_favorite_book(id):
 		data=favorite_dict,
 		message= 'created a favorite for a book',
 		status=200),200
+
+#removes a book as a favorite
+@favorites.route('/<id>', methods=['Delete'])
+@login_required
+def delete_Book_favorite(id):
+	fav_to_remove = models.Favorite.get_by_id(id)
+	print("My current User id >>>>",current_user.id)
+	print("My fav to remove >>>>",fav_to_remove.User_id)
+	print("Type current User id >>>>",type(current_user.id))
+	print("Type fav to remove >>>>",type(fav_to_remove.User_id.id))
+	if fav_to_remove.User_id.id == current_user.id:
+		fav_to_remove.delete_instance()
+		return jsonify(data={}, 
+			message='Deleted Favorite', 
+			status=200),200
+	else:
+		return jsonify(
+			data={
+				'error': 'Forbidden'
+			}, message='cant delete favorite', status=403),403
+
