@@ -6,7 +6,7 @@ from flask_login import LoginManager
 
 from resources.users import users
 from resources.books import books
-# from resources.notifications import notifications
+from resources.notifications import notifications
 from resources.favorites import favorites
 import models
 
@@ -46,13 +46,13 @@ def unauthorized():
 CORS(users, origins=['http://localhost:3000'], supports_credentials=True)
 CORS(books, origins=['http://localhost:3000'], supports_credentials=True)
 CORS(favorites, origins=['http://localhost:3000'], supports_credentials=True)
-#CORS(notifications, origins=['http://localhost:3000'], supports_credentials=True)
+CORS(notifications, origins=['http://localhost:3000'], supports_credentials=True)
 
 
 app.register_blueprint(users, url_prefix='/api/v1/users')
 app.register_blueprint(books, url_prefix='/api/v1/books')
 app.register_blueprint(favorites, url_prefix='/api/v1/favorites')
-# app.register_blueprint(notifications, url_prefix='/api/v1/notifications')
+app.register_blueprint(notifications, url_prefix='/api/v1/notifications')
 
 @app.before_request
 def before_request():

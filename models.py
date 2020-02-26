@@ -56,7 +56,7 @@ class Notification(Model):
 	Buyer_id = ForeignKeyField(User, backref='Notification',on_delete='CASCADE')
 	status = BooleanField(null=True)
 	message = CharField(null=False)
-
+ 
 	class Meta:
 		database = DATABASE
 
