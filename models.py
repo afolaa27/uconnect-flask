@@ -10,8 +10,6 @@ DATABASE = SqliteDatabase('uconnect.sqlite', pragmas={'foreign_keys': 1})
 
 class User(UserMixin, Model):
 	username = CharField(unique=True)
-	latitude = DecimalField()
-	longitude = DecimalField()
 	age = IntegerField()
 	email = CharField(unique=True)
 	password = CharField()
@@ -38,7 +36,12 @@ class Book(Model):
 	price = IntegerField()
 	owner = ForeignKeyField(User, backref='Books', on_delete='CASCADE')
 	image=ForeignKeyField(Image, backref='Books',on_delete='CASCADE')
-	
+	# city=CharField()
+	# state=CharField()
+	# street_address_one=CharField()
+	# street_address_two=CharField()
+	# zip_code=IntegerField()
+	# country=
 
 	class Meta:
 		database = DATABASE

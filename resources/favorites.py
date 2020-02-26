@@ -13,13 +13,9 @@ favorites = Blueprint('favorites', 'favorites')
 @login_required
 def favorite_books():
 	current_user_favorites= [model_to_dict(book) for book in current_user.Favorite]
-	print(current_user_favorites[1])
+	
 	for i in current_user_favorites:
-		i['User_id'].pop('latitude')
-		i['User_id'].pop('longitude')
 		i['User_id'].pop('password')
-		i['Book_Id']['owner'].pop('latitude')
-		i['Book_Id']['owner'].pop('longitude')
 		i['Book_Id']['owner'].pop('password')
 		i['Book_Id']['image'].pop('data')
 	return jsonify(
@@ -40,11 +36,9 @@ def create_favorite_book(id):
 	print(">>>>",favorite_dict)
 
 	#favorite_dict['User_id'].pop('')
-	favorite_dict['User_id'].pop('latitude')
-	favorite_dict['User_id'].pop('longitude')
+	
 	favorite_dict['User_id'].pop('password')
-	favorite_dict['Book_Id']['owner'].pop('latitude')
-	favorite_dict['Book_Id']['owner'].pop('longitude')
+	
 	favorite_dict['Book_Id']['owner'].pop('password')
 	favorite_dict['Book_Id']['image'].pop('data')
 	return jsonify(

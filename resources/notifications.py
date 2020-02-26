@@ -22,14 +22,8 @@ def create_notification():
 
 	notification_to_dict = model_to_dict(notification)
 	print(notification_to_dict)
-	notification_to_dict['Seller_id'].pop('latitude')
-	notification_to_dict['Seller_id'].pop('longitude')
 	notification_to_dict['Seller_id'].pop('password')
-	notification_to_dict['Buyer_id'].pop('latitude')
-	notification_to_dict['Buyer_id'].pop('longitude')
 	notification_to_dict['Buyer_id'].pop('password')
-	notification_to_dict['Book_id']['owner'].pop('latitude')
-	notification_to_dict['Book_id']['owner'].pop('longitude')
 	notification_to_dict['Book_id']['owner'].pop('password')
 	notification_to_dict['Book_id']['image'].pop('data')
 	
@@ -39,3 +33,15 @@ def create_notification():
 		status=200),200
 
 #gets all notification for logged in user
+@notifications.route('/', methods=['GET'])
+@login_required
+def get_notifications():
+	current_user_notifications= [model_to_dict(nots) for nots in current_user.Favorite]
+	for i in current_user_notifications:
+		i['User_id'].pop('password')
+		i['Book_Id']['owner'].pop('password')
+		i['Book_Id']['image'].pop('data')
+
+	return jsonify(data=current_user_notifications,
+		message="got all notifications",
+		status=200),200

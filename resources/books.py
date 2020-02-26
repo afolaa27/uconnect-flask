@@ -13,12 +13,9 @@ books = Blueprint('books', 'books')
 @books.route('/', methods=['POST'])
 @login_required
 def create_book():
-
-
 	payload = request.get_json()
 	print("post route")
 	
-
 	image = models.Image.create(
 		filename=payload['filename'],
 		data=payload['data'],
@@ -27,9 +24,6 @@ def create_book():
 
 	image_dict = model_to_dict(image)
 	
-	
-	
-
 	book = models.Book.create(
 		title=payload['title'],
 		ISBN=payload['ISBN'],
@@ -42,12 +36,10 @@ def create_book():
 	book_dict = model_to_dict(book)
 	print("this is book_dict >>> ",book_dict)
 	book_dict["image"].pop('data')
-	book_dict["owner"].pop('latitude')
-	book_dict["owner"].pop('longitude')
+	
 	book_dict["owner"].pop('password')
 	print(book_dict['id'])
 	print('the book id ^^^^')
-
 
 	return jsonify(
 		data=book_dict,
@@ -62,8 +54,6 @@ def index():
 	
 	for i in current_user_books:
 		i['owner'].pop('age')
-		i['owner'].pop('longitude')
-		i['owner'].pop('latitude')
 		i['owner'].pop('password')
 		i['owner'].pop('email')
 		i['owner'].pop('school')
@@ -83,8 +73,6 @@ def show(id):
 	book = models.Book.get_by_id(id)
 	book_dict = model_to_dict(book)
 	book_dict["image"].pop('data')
-	book_dict["owner"].pop('latitude')
-	book_dict["owner"].pop('longitude')
 	book_dict["owner"].pop('password')
 	return jsonify(
 		data=book_dict,
@@ -114,8 +102,7 @@ def update_book(id):
 	
 
 		book_dict["image"].pop('data')
-		book_dict["owner"].pop('latitude')
-		book_dict["owner"].pop('longitude')
+	
 		book_dict["owner"].pop('password')
 
 		return jsonify(

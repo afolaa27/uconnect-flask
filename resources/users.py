@@ -24,8 +24,6 @@ def register_user():
 			password=generate_password_hash(payload['password']),
 			age= payload['age'],
 			school= payload['school'],
-			longitude=payload['longitude'],
-			latitude= payload['latitude']
 			)
 		login_user(created_user)
 		user_dict = model_to_dict(created_user)
@@ -49,9 +47,6 @@ def login():
 			login_user(user)
 			user_dict.pop('password')
 
-			user_dict['latitude']=str(user_dict['latitude'])
-			user_dict['longitude']=str(user_dict['longitude'])
-			print(type(user_dict['longitude']))
 			return jsonify(
 				data=user_dict,
 				message='logged in',
@@ -76,8 +71,6 @@ def get_logged_in_user():
 	else :
 		user_dict = model_to_dict(current_user)
 		user_dict.pop('password')
-		user_dict['latitude']=str(user_dict['latitude'])
-		user_dict['longitude']=str(user_dict['longitude'])
 		
 		return jsonify(
 			data=user_dict,
