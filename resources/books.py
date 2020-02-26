@@ -76,6 +76,22 @@ def index():
 		message= 'Got current user books',
 		status=200),200
 
+#Gets information about one book 
+@books.route('/<id>', methods=['GET'])
+@login_required
+def show(id):
+	book = models.Book.get_by_id(id)
+	book_dict = model_to_dict(book)
+	book_dict["image"].pop('data')
+	book_dict["owner"].pop('latitude')
+	book_dict["owner"].pop('longitude')
+	book_dict["owner"].pop('password')
+	return jsonify(
+		data=book_dict,
+		message="show page",
+		status=200),200
+
+
 #update one book
 @books.route('/<id>', methods=['PUT'])
 @login_required
@@ -139,15 +155,15 @@ def search_book():
 	if payload['choice'] == 'ISBN':
 		isbn = payload['search']
 		for book in query.where(models.Book.ISBN ==isbn):
-			print(book.title)
+			print(book.ISBN)
 	elif payload['choice'] == 'title':
 		title =payload['search']
 		for book in query.where(models.Book.title == title):
-			print(book.price)
+			print(book.title)
 	elif payload['choice'] == 'price':
 		price =payload['search']
 		for book in query.where(models.Book.price == price):
-			print(book.description)
+			print(book.title)
 	return jsonify(
 		data={})
 
