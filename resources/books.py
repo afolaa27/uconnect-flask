@@ -95,6 +95,10 @@ def update_book(id):
 			book.price = payload['price']
 		if 'description' in payload:
 			book.description = payload['description']
+		if 'image' in payload:
+			book.image = payload['image']
+		if 'address' in payload:
+			book.address = payload['address']
 		book.save()
 		book_dict = model_to_dict(book)
 	

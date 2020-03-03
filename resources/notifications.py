@@ -25,7 +25,7 @@ def create_notification():
 	notification_to_dict['Seller_id'].pop('password')
 	notification_to_dict['Buyer_id'].pop('password')
 	notification_to_dict['Book_id']['owner'].pop('password')
-	notification_to_dict['Book_id']['image'].pop('data')
+	
 	
 	return jsonify(
 		data=notification_to_dict,
@@ -40,7 +40,7 @@ def get_notifications():
 	for i in current_user_notifications:
 		i['User_id'].pop('password')
 		i['Book_Id']['owner'].pop('password')
-		i['Book_Id']['image'].pop('data')
+	
 
 	return jsonify(data=current_user_notifications,
 		message="got all notifications",

@@ -17,7 +17,7 @@ def favorite_books():
 	for i in current_user_favorites:
 		i['User_id'].pop('password')
 		i['Book_Id']['owner'].pop('password')
-		i['Book_Id']['image'].pop('data')
+		
 	return jsonify(
 		data=current_user_favorites,
 		message='Got favorite books',
@@ -40,7 +40,7 @@ def create_favorite_book(id):
 	favorite_dict['User_id'].pop('password')
 	
 	favorite_dict['Book_Id']['owner'].pop('password')
-	favorite_dict['Book_Id']['image'].pop('data')
+	
 	return jsonify(
 		data=favorite_dict,
 		message= 'created a favorite for a book',
