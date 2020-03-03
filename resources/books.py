@@ -15,14 +15,11 @@ books = Blueprint('books', 'books')
 def create_book():
 	payload = request.get_json()
 	print("post route")
-	
-	image = models.Image.create(
-		filename=payload['filename'],
-		data=payload['data'],
-		
-		)
 
-	image_dict = model_to_dict(image)
+
+	print(payload)
+
+	
 	
 	book = models.Book.create(
 		title=payload['title'],
@@ -30,12 +27,12 @@ def create_book():
 		description=payload['description'],
 		price=payload['price'],
 		owner=current_user.id,
-		image=image_dict['id']
+		image=payload['image'],
+		address=payload['value']
 	)
 
 	book_dict = model_to_dict(book)
 	print("this is book_dict >>> ",book_dict)
-	book_dict["image"].pop('data')
 	
 	book_dict["owner"].pop('password')
 	print(book_dict['id'])
@@ -50,7 +47,7 @@ def create_book():
 @books.route('/', methods=['GET'])
 @login_required
 def index():
-	current_user_books= [model_to_dict(book) for book in current_user.Books]
+	current_user_books = [model_to_dict(book) for book in current_user.Books]
 	
 	for i in current_user_books:
 		i['owner'].pop('age')
@@ -58,13 +55,14 @@ def index():
 		i['owner'].pop('email')
 		i['owner'].pop('school')
 		i['owner'].pop('id')
-		i['image']['data']=str(i['image']['data'])
+		
 		 
 	 
 	return jsonify(
 		data=current_user_books,
 		message= 'Got current user books',
 		status=200),200
+
 
 #Gets information about one book 
 @books.route('/<id>', methods=['GET'])
@@ -100,9 +98,7 @@ def update_book(id):
 		book.save()
 		book_dict = model_to_dict(book)
 	
-
-		book_dict["image"].pop('data')
-	
+		
 		book_dict["owner"].pop('password')
 
 		return jsonify(

@@ -2,7 +2,7 @@ import models
 
 from flask import Blueprint, request, jsonify 
 from flask_bcrypt import generate_password_hash, check_password_hash
-from flask_login import login_user, current_user, logout_user
+from flask_login import login_user, current_user, logout_user, login_required
 from playhouse.shortcuts import model_to_dict
 
 users= Blueprint('users', 'users')
@@ -59,6 +59,25 @@ def login():
 			message='email or password incorrect',
 			status=401),401
 
+# #show all logged in user books
+# @users.route('/', methods=['GET'])
+# @login_required
+# def index():
+# 	current_user_books= [model_to_dict(book) for book in current_user.Books]
+	
+# 	for i in current_user_books:
+# 		i['owner'].pop('age')
+# 		i['owner'].pop('password')
+# 		i['owner'].pop('email')
+# 		i['owner'].pop('school')
+# 		i['owner'].pop('id')
+# 		i['image']['data']=str(i['image']['data'])
+		 
+	 
+# 	return jsonify(
+# 		data=current_user_books,
+# 		message= 'Got current user books',
+# 		status=200),200
 
 #check who is logged in route
 @users.route('loggedin', methods=['GET'])
