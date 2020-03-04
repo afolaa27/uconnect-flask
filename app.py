@@ -1,4 +1,4 @@
-	import os
+import os
 from flask import Flask, jsonify, g
 
 from flask_cors import CORS
@@ -30,6 +30,7 @@ def load_user(userid):
 		return models.User.get(models.User.id == userid)
 	except models.DoesNotExist:
 		return None
+
 
 
 
