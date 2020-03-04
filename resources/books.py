@@ -64,6 +64,30 @@ def index():
 		status=200),200
 
 
+@books.route('/all', methods=['GET'])
+@login_required
+def all():
+
+	all_users_books = models.Book.select().where(models.Book.owner != current_user.id)
+	
+	all_users_books_dict = [model_to_dict(book) for book in all_users_books]
+
+	for i in all_users_books_dict:
+		i['owner'].pop('age')
+		i['owner'].pop('password')
+		i['owner'].pop('email')
+		i['owner'].pop('school')
+		i['owner'].pop('id')
+		
+		 
+	 
+	return jsonify(
+		data=all_users_books_dict,
+		message= 'Got all books',
+		status=200),200
+
+
+
 #Gets information about one book 
 @books.route('/<id>', methods=['GET'])
 @login_required
