@@ -1,3 +1,4 @@
+	import os
 from flask import Flask, jsonify, g
 
 from flask_cors import CORS
@@ -43,10 +44,10 @@ def unauthorized():
 		), 401
 
 
-CORS(users, origins=['http://localhost:3000'], supports_credentials=True)
-CORS(books, origins=['http://localhost:3000'], supports_credentials=True)
-CORS(favorites, origins=['http://localhost:3000'], supports_credentials=True)
-CORS(notifications, origins=['http://localhost:3000'], supports_credentials=True)
+CORS(users, origins=['http://localhost:3000','https://dashboard.heroku.com/apps/uconnect-react-app'], supports_credentials=True)
+CORS(books, origins=['http://localhost:3000','https://dashboard.heroku.com/apps/uconnect-react-app'], supports_credentials=True)
+CORS(favorites, origins=['http://localhost:3000','https://dashboard.heroku.com/apps/uconnect-react-app'], supports_credentials=True)
+CORS(notifications, origins=['http://localhost:3000','https://dashboard.heroku.com/apps/uconnect-react-app'], supports_credentials=True)
 
 
 app.register_blueprint(users, url_prefix='/api/v1/users')
@@ -65,7 +66,9 @@ def after_request(response):
 	g.db.close()
 	return response
 
-
+if 'ON_HEROKU' in os.environ: 
+  print('\non heroku!')
+  models.initialize()
 
 if __name__ == '__main__':
 	models.initialize()
