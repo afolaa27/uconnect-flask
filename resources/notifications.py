@@ -9,14 +9,14 @@ from playhouse.shortcuts import model_to_dict
 notifications = Blueprint('notifications', 'notifications')
 
 #creates a notification
-@notifications.route('/', methods=['POST'])
+@notifications.route('/<id>', methods=['POST'])
 @login_required
-def create_notification():
+def create_notification(id):
 	payload = request.get_json()
 
 	notification = models.Notification.create(
 		Seller_id=payload['Seller_id'],
-		Book_id=payload['Book_id'],
+		Book_id=id,
 		Buyer_id= current_user.id,
 		message=payload['message'])
 
@@ -36,7 +36,7 @@ def create_notification():
 @notifications.route('/', methods=['GET'])
 @login_required
 def get_notifications():
-	current_user_notifications= [model_to_dict(nots) for nots in current_user.Favorite]
+	current_user_notifications= [model_to_dict(nots) for nots in current_user.notification]
 	for i in current_user_notifications:
 		i['User_id'].pop('password')
 		i['Book_Id']['owner'].pop('password')
