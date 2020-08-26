@@ -11,6 +11,7 @@ from resources.notifications import notifications
 from resources.favorites import favorites
 import models
 
+#UPDATED MODULES
 DEBUG = True
 PORT= 8000
 
