@@ -47,6 +47,8 @@ def create_book():
 @books.route('/', methods=['GET'])
 @login_required
 def index():
+
+	print('this is the begining of my books')
 	current_user_books = [model_to_dict(book) for book in current_user.Books]
 	
 	for i in current_user_books:
@@ -56,7 +58,7 @@ def index():
 		i['owner'].pop('school')
 		i['owner'].pop('id')
 		
-		 
+		
 	 
 	return jsonify(
 		data=current_user_books,

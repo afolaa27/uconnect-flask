@@ -44,8 +44,11 @@ def login():
 
 		check_password = check_password_hash(user_dict['password'],payload['password'])
 		if check_password:
+
+			
+			print (user.is_authenticated)
+			user.is_authenticated
 			login_user(user)
-			is_authenticated(user)
 			user_dict.pop('password')
 
 			return jsonify(
