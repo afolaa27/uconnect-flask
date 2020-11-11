@@ -26,6 +26,7 @@ class User(UserMixin, Model):
 	password = CharField()
 	school = CharField()
 	
+	
 
 	class Meta:
 		database = DATABASE
