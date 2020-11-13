@@ -34,15 +34,15 @@ def load_user(userid):
 
 
 
-#@login_manager.unauthorized_handler
-#def unauthorized():
-	#return jsonify(
-		#data={
-			#'error':'User not logged in'
-		#}, 
-		#message='You must be logged in to access that',
-		#status=401
-		#), 401
+@login_manager.unauthorized_handler
+def unauthorized():
+	return jsonify(
+		data={
+			'error':'User not logged in'
+		}, 
+		message='You must be logged in to access that',
+		status=401
+		), 401
 
 
 CORS(users, origins=['http://localhost:3000','https://uconnect-react-app.herokuapp.com'], supports_credentials=True)
