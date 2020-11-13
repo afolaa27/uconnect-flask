@@ -106,7 +106,7 @@ def show(id):
 
 #update one book
 @books.route('/<id>', methods=['PUT'])
-#@login_required
+@login_required
 def update_book(id):
 	payload = request.get_json()
 	book = models.Book.get_by_id(id)

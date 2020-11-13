@@ -46,10 +46,11 @@ def login():
 		if check_password:
 
 			
-			user.is_authenticated
 			print (user.is_authenticated)
-			print(user_dict)
+			print(user_dictx)
 			login_user(user)
+			user.is_authenticated
+			current_user.is_authenticated
 
 			user_dict.pop('password')
 
