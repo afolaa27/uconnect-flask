@@ -11,7 +11,7 @@ books = Blueprint('books', 'books')
 
 #create book route
 @books.route('/', methods=['POST'])
-@login_required
+#@login_required
 def create_book():
 	payload = request.get_json()
 	print("post route")
@@ -67,7 +67,7 @@ def index():
 
 
 @books.route('/all', methods=['GET'])
-@login_required
+#@login_required
 def all():
 
 	all_users_books = models.Book.select().where(models.Book.owner != current_user.id)
@@ -92,7 +92,7 @@ def all():
 
 #Gets information about one book 
 @books.route('/<id>', methods=['GET'])
-@login_required
+#@login_required
 def show(id):
 	book = models.Book.get_by_id(id)
 	book_dict = model_to_dict(book)
@@ -106,7 +106,7 @@ def show(id):
 
 #update one book
 @books.route('/<id>', methods=['PUT'])
-@login_required
+#@login_required
 def update_book(id):
 	payload = request.get_json()
 	book = models.Book.get_by_id(id)
