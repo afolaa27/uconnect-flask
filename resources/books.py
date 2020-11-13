@@ -45,7 +45,7 @@ def create_book():
 
 #show all logged in user books
 @books.route('/', methods=['GET'])
-@login_required
+#@login_required
 def index():
 
 	print('this is the begining of my books')
