@@ -46,7 +46,8 @@ def login():
 		if check_password:
 
 			
-			user.is_authenticated = True
+			user.is_authenticated
+			
 
 			print (user.is_authenticated)
 			print(user_dict)
