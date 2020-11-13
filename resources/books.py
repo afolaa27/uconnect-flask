@@ -2,7 +2,7 @@ import models
 
 from flask import Blueprint, request, jsonify 
 
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required 
 
 from playhouse.shortcuts import model_to_dict
 
@@ -49,7 +49,6 @@ def create_book():
 def index():
 
 	print('this is the begining of my books')
-	print(current_user)
 	current_user_books = [model_to_dict(book) for book in current_user.Books]
 	
 	for i in current_user_books:
@@ -107,7 +106,7 @@ def show(id):
 
 #update one book
 @books.route('/<id>', methods=['PUT'])
-@login_required
+#@login_required
 def update_book(id):
 	payload = request.get_json()
 	book = models.Book.get_by_id(id)
