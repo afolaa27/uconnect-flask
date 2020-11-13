@@ -49,6 +49,7 @@ def create_book():
 def index():
 
 	print('this is the begining of my books')
+	print(current_user)
 	current_user_books = [model_to_dict(book) for book in current_user.Books]
 	
 	for i in current_user_books:
