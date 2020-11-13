@@ -36,7 +36,7 @@ def load_user(userid):
 #@login_manager.is_authenticated
 #def is_authenticated(userid):
 	#return userid.authenticated
-#@login_manager.unauthorized_handler
+@login_manager.unauthorized_handler
 def unauthorized():
 	return jsonify(
 		data={
