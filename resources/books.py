@@ -11,7 +11,7 @@ books = Blueprint('books', 'books')
 
 #create book route
 @books.route('/', methods=['POST'])
-#@login_required
+@login_required
 def create_book():
 	payload = request.get_json()
 	print("post route")
@@ -45,7 +45,7 @@ def create_book():
 
 #show all logged in user books
 @books.route('/', methods=['GET'])
-@login_required
+#@login_required
 def index():
 
 	print('this is the begining of my books')
