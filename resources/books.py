@@ -2,7 +2,7 @@ import models
 
 from flask import Blueprint, request, jsonify 
 
-from flask_login import current_user, login_required 
+from flask_login import current_user, login_required
 
 from playhouse.shortcuts import model_to_dict
 
@@ -45,9 +45,9 @@ def create_book():
 
 #show all logged in user books
 @books.route('/', methods=['GET'])
-#@login_required
+@login_required
 def index():
-
+	#print("i am the current user" + current_user.is_authenticated)
 	print('this is the begining of my books')
 	current_user_books = [model_to_dict(book) for book in current_user.Books]
 	

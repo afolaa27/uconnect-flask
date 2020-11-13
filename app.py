@@ -3,7 +3,7 @@ from flask import Flask, jsonify, g
 
 from flask_cors import CORS
 
-from flask_login import LoginManager 
+from flask_login import LoginManager
 
 from resources.users import users
 from resources.books import books
@@ -33,8 +33,10 @@ def load_user(userid):
 		return None
 
 
-
-@login_manager.unauthorized_handler
+#@login_manager.is_authenticated
+#def is_authenticated(userid):
+	#return userid.authenticated
+#@login_manager.unauthorized_handler
 def unauthorized():
 	return jsonify(
 		data={
