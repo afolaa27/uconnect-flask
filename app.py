@@ -18,6 +18,7 @@ PORT= 8000
 
 app = Flask(__name__)
 
+CORS(app, origins=['http://localhost:3000','https://uconnect-react-app.herokuapp.com'], supports_credentials=True)
 
 app.secret_key = 'Juice world'
 login_manager = LoginManager()
@@ -33,10 +34,6 @@ def load_user(userid):
 		return None
 
 
-#@login_manager.is_authenticated
-#def is_authenticated(userid):
-	#return userid.authenticated
-
 @login_manager.unauthorized_handler
 def unauthorized():
 	return jsonify(
@@ -48,10 +45,10 @@ def unauthorized():
 		), 401
 
 
-CORS(users, origins=['http://localhost:3000','https://uconnect-react-app.herokuapp.com'], supports_credentials=True)
-CORS(books, origins=['http://localhost:3000','https://uconnect-react-app.herokuapp.com'], supports_credentials=True)
-CORS(favorites, origins=['http://localhost:3000','https://uconnect-react-app.herokuapp.com'], supports_credentials=True)
-CORS(notifications, origins=['http://localhost:3000','https://uconnect-react-app.herokuapp.com'], supports_credentials=True)
+#CORS(users, origins=['http://localhost:3000','https://uconnect-react-app.herokuapp.com'], supports_credentials=True)
+#CORS(books, origins=['http://localhost:3000','https://uconnect-react-app.herokuapp.com'], supports_credentials=True)
+#CORS(favorites, origins=['http://localhost:3000','https://uconnect-react-app.herokuapp.com'], supports_credentials=True)
+#CORS(notifications, origins=['http://localhost:3000','https://uconnect-react-app.herokuapp.com'], supports_credentials=True)
 
 
 app.register_blueprint(users, url_prefix='/api/v1/users')
