@@ -18,7 +18,7 @@ PORT= 8000
 
 app = Flask(__name__)
 
-#CORS(app, origins=['http://localhost:3000','https://uconnect-react-app.herokuapp.com'], supports_credentials=True)
+CORS(app, origins=['http://localhost:3000','https://uconnect-react-app.herokuapp.com'], supports_credentials=True)
 
 app.secret_key = 'Juice world'
 login_manager = LoginManager()
@@ -45,8 +45,8 @@ def unauthorized():
 		), 401
 
 
-CORS(users, origins=['http://localhost:3000','https://uconnect-react-app.herokuapp.com'], supports_credentials=True)
-CORS(books, origins=['http://localhost:3000','https://uconnect-react-app.herokuapp.com'], supports_credentials=True)
+#CORS(users, origins=['http://localhost:3000','https://uconnect-react-app.herokuapp.com'], supports_credentials=True)
+#CORS(books, origins=['http://localhost:3000','https://uconnect-react-app.herokuapp.com'], supports_credentials=True)
 #CORS(favorites, origins=['http://localhost:3000','https://uconnect-react-app.herokuapp.com'], supports_credentials=True)
 #CORS(notifications, origins=['http://localhost:3000','https://uconnect-react-app.herokuapp.com'], supports_credentials=True)
 
