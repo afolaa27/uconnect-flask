@@ -19,8 +19,6 @@ def create_book():
 
 	print(payload)
 
-	
-	
 	book = models.Book.create(
 		title=payload['title'],
 		ISBN=payload['ISBN'],
