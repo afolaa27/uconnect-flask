@@ -45,12 +45,11 @@ def login():
 		check_password = check_password_hash(user_dict['password'],payload['password'])
 		if check_password:
 
-			
 			login_user(user, remember=True)
-			current_user.is_authenticated
-			user.is_authenticated
-			print (user.is_authenticated)
-			print(user_dict)
+			#current_user.is_authenticated
+			#user.is_authenticated
+			#print (user.is_authenticated)
+			#print(user_dict)
 
 			user_dict.pop('password')
 
