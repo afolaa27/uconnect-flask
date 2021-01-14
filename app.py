@@ -55,6 +55,10 @@ app.register_blueprint(users, url_prefix='/api/v1/users')
 app.register_blueprint(books, url_prefix='/api/v1/books')
 app.register_blueprint(favorites, url_prefix='/api/v1/favorites')
 app.register_blueprint(notifications, url_prefix='/api/v1/notifications')
+app.config.update(
+  SESSION_COOKIE_SECURE=True,
+  SESSION_COOKIE_SAMESITE='None'
+)
 
 @app.before_request
 def before_request():
