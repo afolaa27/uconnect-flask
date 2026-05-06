@@ -157,6 +157,24 @@ def delete_book(id):
 				'error': 'Forbidden'
 			}, message='cant delete book', status=403),403
 
+@books.route('/recommend', methods=['GET'])
+@login_required
+def recommend():
+    q = request.args.get('q', '').strip()
+    if not q:
+        return jsonify(data=[], message='no query', status=200), 200
+    results = (models.Book.select()
+        .where(
+            (models.Book.title.contains(q)) |
+            (models.Book.description.contains(q)) |
+            (models.Book.ISBN.contains(q))
+        )
+        .where(models.Book.owner != current_user.id))
+    result_dicts = [model_to_dict(b) for b in results]
+    for b in result_dicts:
+        b['owner'].pop('password', None)
+    return jsonify(data=result_dicts, message='recommendations', status=200), 200
+
 #searches based on user choice of search either ISBN, Title, Price, school
 @books.route('/search', methods=['GET'])
 def search_book():

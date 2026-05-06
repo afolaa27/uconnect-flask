@@ -54,12 +54,14 @@ class Favorite(Model):
 		database = DATABASE
 
 class Notification(Model):
-	Seller_id = ForeignKeyField(User, backref='Notification',on_delete='CASCADE')
-	Book_id = ForeignKeyField(Book, backref='Notification',on_delete='CASCADE')
-	Buyer_id = ForeignKeyField(User, backref='Notification',on_delete='CASCADE')
+	Seller_id = ForeignKeyField(User, backref='received_notifications', on_delete='CASCADE')
+	Book_id = ForeignKeyField(Book, backref='Notification', on_delete='CASCADE')
+	Buyer_id = ForeignKeyField(User, backref='sent_notifications', on_delete='CASCADE')
 	status = BooleanField(null=True)
 	message = CharField(null=False)
- 
+	read = BooleanField(default=False)
+	created_at = DateTimeField(default=datetime.datetime.now)
+
 	class Meta:
 		database = DATABASE
 
@@ -69,6 +71,15 @@ def initialize():
 	DATABASE.create_tables([User, Book, Favorite, Notification], safe=True)
 	print('connected and printed tables')
 
+	try:
+		DATABASE.execute_sql('ALTER TABLE notification ADD COLUMN read INTEGER DEFAULT 0')
+	except:
+		pass
+	try:
+		DATABASE.execute_sql('ALTER TABLE notification ADD COLUMN created_at TEXT')
+		DATABASE.execute_sql("UPDATE notification SET created_at = datetime('now') WHERE created_at IS NULL")
+	except:
+		pass
 
 	DATABASE.close()
 
