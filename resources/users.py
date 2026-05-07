@@ -1,6 +1,6 @@
 import models
 
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, request, jsonify, session, current_app
 from flask_bcrypt import generate_password_hash, check_password_hash
 from flask_login import login_user, current_user, logout_user, login_required
 from playhouse.shortcuts import model_to_dict
@@ -28,6 +28,8 @@ def register_user():
 		login_user(created_user)
 		user_dict = model_to_dict(created_user)
 		user_dict.pop('password')
+		from app import make_token
+		user_dict['token'] = make_token(created_user.id)
 	return jsonify(
 		data= user_dict,
 		message='created an account',
@@ -46,13 +48,9 @@ def login():
 		if check_password:
 
 			login_user(user, remember=True)
-			#current_user.is_authenticated
-			#user.is_authenticated
-			#print (user.is_authenticated)
-			#print(user_dict)
-
 			user_dict.pop('password')
-
+			from app import make_token
+			user_dict['token'] = make_token(user.id)
 			return jsonify(
 				data=user_dict,
 				message='logged in',

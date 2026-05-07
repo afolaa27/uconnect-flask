@@ -2,10 +2,11 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-from flask import Flask, jsonify, g, redirect, session
+from flask import Flask, jsonify, g, redirect, session, request
 from flask_cors import CORS
-from flask_login import LoginManager, login_user
+from flask_login import LoginManager, login_user, current_user
 from flask_socketio import emit, join_room
+from itsdangerous import URLSafeTimedSerializer
 from flask_dance.contrib.google import make_google_blueprint
 from flask_dance.consumer import oauth_authorized
 
@@ -28,6 +29,19 @@ if DEBUG:
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
+
+
+def make_token(user_id):
+    s = URLSafeTimedSerializer(app.secret_key)
+    return s.dumps(str(user_id), salt='auth')
+
+
+def decode_token(token):
+    s = URLSafeTimedSerializer(app.secret_key)
+    try:
+        return int(s.loads(token, salt='auth', max_age=60 * 60 * 24 * 30))
+    except Exception:
+        return None
 
 ALLOWED_ORIGINS = ['http://localhost:3000', 'http://localhost:3001', FRONTEND_URL]
 
@@ -74,7 +88,8 @@ def google_logged_in(blueprint, token):
     login_user(user, remember=True)
     session['is_new_user'] = is_new
     session['just_logged_in'] = True
-    return redirect(FRONTEND_URL)
+    token = make_token(user.id)
+    return redirect(f"{FRONTEND_URL}?token={token}&is_new={'1' if is_new else '0'}")
 # ─────────────────────────────────────────────────────────────────────────────
 
 login_manager = LoginManager()
@@ -114,6 +129,15 @@ if os.environ.get('DATABASE_URL'):
 def before_request():
     g.db = models.DATABASE
     g.db.connect()
+    auth = request.headers.get('Authorization', '')
+    if auth.startswith('Bearer ') and not current_user.is_authenticated:
+        user_id = decode_token(auth[7:])
+        if user_id:
+            try:
+                user = models.User.get(models.User.id == user_id)
+                login_user(user)
+            except models.DoesNotExist:
+                pass
 
 
 @app.after_request
