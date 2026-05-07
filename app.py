@@ -154,6 +154,11 @@ def after_request(response):
     return response
 
 
+@app.route('/health')
+def health():
+    return jsonify(status='ok'), 200
+
+
 if os.environ.get('DATABASE_URL'):
     models.initialize()
 
