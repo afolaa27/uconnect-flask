@@ -25,6 +25,8 @@ class User(UserMixin, Model):
 	email = CharField(unique=True)
 	password = CharField()
 	school = CharField()
+	avatar = CharField(default='')
+	address = CharField(default='')
 	
 	
 
@@ -41,6 +43,8 @@ class Book(Model):
 	owner = ForeignKeyField(User, backref='Books', on_delete='CASCADE')
 	image = CharField()
 	address= CharField()
+	subject = CharField(default='')
+	condition = CharField(default='')
 
 	class Meta:
 		database = DATABASE
@@ -65,10 +69,30 @@ class Notification(Model):
 	class Meta:
 		database = DATABASE
 
+class Offer(Model):
+	book = ForeignKeyField(Book, backref='offers', on_delete='CASCADE')
+	buyer = ForeignKeyField(User, backref='sent_offers', on_delete='CASCADE')
+	seller = ForeignKeyField(User, backref='received_offers', on_delete='CASCADE')
+	amount = IntegerField()
+	status = CharField(default='pending')  # 'pending', 'accepted', 'declined'
+	created_at = DateTimeField(default=datetime.datetime.now)
+
+	class Meta:
+		database = DATABASE
+
+class Message(Model):
+	offer = ForeignKeyField(Offer, backref='messages', on_delete='CASCADE')
+	sender = ForeignKeyField(User, backref='sent_messages', on_delete='CASCADE')
+	body = TextField()
+	created_at = DateTimeField(default=datetime.datetime.now)
+
+	class Meta:
+		database = DATABASE
+
 def initialize():
 	DATABASE.connect()
 
-	DATABASE.create_tables([User, Book, Favorite, Notification], safe=True)
+	DATABASE.create_tables([User, Book, Favorite, Notification, Offer, Message], safe=True)
 	print('connected and printed tables')
 
 	try:
@@ -78,6 +102,22 @@ def initialize():
 	try:
 		DATABASE.execute_sql('ALTER TABLE notification ADD COLUMN created_at TEXT')
 		DATABASE.execute_sql("UPDATE notification SET created_at = datetime('now') WHERE created_at IS NULL")
+	except:
+		pass
+	try:
+		DATABASE.execute_sql("ALTER TABLE book ADD COLUMN subject TEXT DEFAULT ''")
+	except:
+		pass
+	try:
+		DATABASE.execute_sql("ALTER TABLE book ADD COLUMN condition TEXT DEFAULT ''")
+	except:
+		pass
+	try:
+		DATABASE.execute_sql("ALTER TABLE user ADD COLUMN avatar TEXT DEFAULT ''")
+	except:
+		pass
+	try:
+		DATABASE.execute_sql("ALTER TABLE user ADD COLUMN address TEXT DEFAULT ''")
 	except:
 		pass
 

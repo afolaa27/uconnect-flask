@@ -7,9 +7,13 @@ notifications = Blueprint('notifications', 'notifications')
 
 def clean_notif(n):
     d = model_to_dict(n)
-    d['Seller_id'].pop('password', None)
-    d['Buyer_id'].pop('password', None)
-    d['Book_id']['owner'].pop('password', None)
+    if isinstance(d.get('Seller_id'), dict):
+        d['Seller_id'].pop('password', None)
+    if isinstance(d.get('Buyer_id'), dict):
+        d['Buyer_id'].pop('password', None)
+    if isinstance(d.get('Book_id'), dict):
+        if isinstance(d['Book_id'].get('owner'), dict):
+            d['Book_id']['owner'].pop('password', None)
     return d
 
 @notifications.route('/<id>', methods=['POST'])

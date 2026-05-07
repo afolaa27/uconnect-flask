@@ -1,6 +1,6 @@
 import models
 
-from flask import Blueprint, request, jsonify 
+from flask import Blueprint, request, jsonify, session
 from flask_bcrypt import generate_password_hash, check_password_hash
 from flask_login import login_user, current_user, logout_user, login_required
 from playhouse.shortcuts import model_to_dict
@@ -96,7 +96,9 @@ def get_logged_in_user():
 	else :
 		user_dict = model_to_dict(current_user)
 		user_dict.pop('password')
-		
+		user_dict['is_new'] = session.pop('is_new_user', False)
+		user_dict['just_logged_in'] = session.pop('just_logged_in', False)
+
 		return jsonify(
 			data=user_dict,
 			message='this is the current logged in user',
@@ -112,8 +114,40 @@ def logout():
 		status=200),200
 
 
+#update profile route
+@users.route('/profile', methods=['PUT'])
+@login_required
+def update_profile():
+	payload = request.get_json()
+	user = models.User.get_by_id(current_user.id)
+
+	if 'username' in payload and payload['username']:
+		user.username = payload['username']
+	if 'email' in payload and payload['email']:
+		user.email = payload['email'].lower()
+	if 'age' in payload and payload['age']:
+		user.age = int(payload['age'])
+	if 'school' in payload and payload['school']:
+		user.school = payload['school']
+	if 'avatar' in payload:
+		user.avatar = payload['avatar']
+	if 'address' in payload:
+		user.address = payload['address']
+
+	if payload.get('new_password'):
+		if not check_password_hash(user.password, payload.get('current_password', '')):
+			return jsonify(data={}, message='Current password is incorrect', status=400), 400
+		user.password = generate_password_hash(payload['new_password'])
+
+	user.save()
+	user_dict = model_to_dict(user)
+	user_dict.pop('password')
+	return jsonify(data=user_dict, message='Profile updated', status=200), 200
+
+
 #delete user and all ref route
-@users.route('/delete', methods=['Delete'])
+@users.route('/delete', methods=['DELETE'])
+@login_required
 def delete_user():
 
 	# user_to_dict = model_to_dict(current_user)

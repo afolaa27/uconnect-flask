@@ -1,10 +1,10 @@
+import datetime
 import models
 
-from flask import Blueprint, request, jsonify 
-
+from flask import Blueprint, request, jsonify
 from flask_login import current_user, login_required
-
 from playhouse.shortcuts import model_to_dict
+from extensions import socketio
 
 books = Blueprint('books', 'books')
 
@@ -26,7 +26,9 @@ def create_book():
 		price=payload['price'],
 		owner=current_user.id,
 		image=payload['image'],
-		address=payload['value']
+		address=payload['value'],
+		subject=payload.get('subject', ''),
+		condition=payload.get('condition', '')
 	)
 
 	book_dict = model_to_dict(book)
@@ -111,6 +113,7 @@ def update_book(id):
 	
 
 	if book.owner.id==current_user.id:
+		old_price = book.price
 		if 'title' in payload:
 			book.title = payload['title']
 		if 'ISBN' in payload:
@@ -123,7 +126,26 @@ def update_book(id):
 			book.image = payload['image']
 		if 'address' in payload:
 			book.address = payload['address']
+		if 'subject' in payload:
+			book.subject = payload['subject']
+		if 'condition' in payload:
+			book.condition = payload['condition']
 		book.save()
+
+		# Notify users who favorited this book if price dropped
+		if 'price' in payload and int(payload['price']) < int(old_price):
+			try:
+				favs = models.Favorite.select().where(models.Favorite.Book_Id == book.id)
+				for fav in favs:
+					socketio.emit('new_notification', {
+						'type': 'price_drop',
+						'message': f'Price drop! "{book.title}" is now ${payload["price"]} (was ${old_price})',
+						'book': book.title,
+						'read': False,
+						'created_at': datetime.datetime.now().isoformat(),
+					}, room=f'user_{fav.User_id.id}', namespace='/')
+			except Exception:
+				pass
 		book_dict = model_to_dict(book)
 	
 		
@@ -167,7 +189,9 @@ def recommend():
         .where(
             (models.Book.title.contains(q)) |
             (models.Book.description.contains(q)) |
-            (models.Book.ISBN.contains(q))
+            (models.Book.ISBN.contains(q)) |
+            (models.Book.subject.contains(q)) |
+            (models.Book.condition.contains(q))
         )
         .where(models.Book.owner != current_user.id))
     result_dicts = [model_to_dict(b) for b in results]
