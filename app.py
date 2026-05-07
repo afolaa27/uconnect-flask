@@ -102,7 +102,12 @@ app.register_blueprint(offers, url_prefix='/api/v1/offers')
 app.register_blueprint(ai)
 
 if os.environ.get('DATABASE_URL'):
-    app.config.update(SESSION_COOKIE_SECURE=True, SESSION_COOKIE_SAMESITE='None')
+    app.config.update(
+        SESSION_COOKIE_SECURE=True,
+        SESSION_COOKIE_SAMESITE='None',
+        REMEMBER_COOKIE_SECURE=True,
+        REMEMBER_COOKIE_SAMESITE='None',
+    )
 
 
 @app.before_request
@@ -114,6 +119,14 @@ def before_request():
 @app.after_request
 def after_request(response):
     g.db.close()
+    if os.environ.get('DATABASE_URL'):
+        cookies = response.headers.getlist('Set-Cookie')
+        if cookies:
+            response.headers.remove('Set-Cookie')
+            for cookie in cookies:
+                if 'SameSite' not in cookie:
+                    cookie += '; SameSite=None; Secure'
+                response.headers.add('Set-Cookie', cookie)
     return response
 
 
