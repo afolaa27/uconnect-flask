@@ -19,7 +19,7 @@ from resources.offers import offers
 from resources.ai import ai
 import models
 
-DEBUG = True
+DEBUG = os.environ.get('FLASK_ENV') != 'production'
 PORT = 8000
 FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
 
@@ -29,9 +29,11 @@ if DEBUG:
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
 
-socketio.init_app(app, cors_allowed_origins=['http://localhost:3000', 'https://uconnect-react-app.herokuapp.com'])
+ALLOWED_ORIGINS = ['http://localhost:3000', 'http://localhost:3001', FRONTEND_URL]
 
-CORS(app, origins=['http://localhost:3000', 'https://uconnect-react-app.herokuapp.com'], supports_credentials=True)
+socketio.init_app(app, cors_allowed_origins=ALLOWED_ORIGINS)
+
+CORS(app, origins=ALLOWED_ORIGINS, supports_credentials=True)
 
 # ── Google OAuth ──────────────────────────────────────────────────────────────
 google_bp = make_google_blueprint(
@@ -99,7 +101,7 @@ app.register_blueprint(notifications, url_prefix='/api/v1/notifications')
 app.register_blueprint(offers, url_prefix='/api/v1/offers')
 app.register_blueprint(ai)
 
-if 'ON_HEROKU' in os.environ:
+if os.environ.get('DATABASE_URL'):
     app.config.update(SESSION_COOKIE_SECURE=True, SESSION_COOKIE_SAMESITE='None')
 
 
@@ -115,8 +117,7 @@ def after_request(response):
     return response
 
 
-if 'ON_HEROKU' in os.environ:
-    print('\non heroku!')
+if os.environ.get('DATABASE_URL'):
     models.initialize()
 
 
