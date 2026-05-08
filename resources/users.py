@@ -28,7 +28,7 @@ def register_user():
 		login_user(created_user)
 		user_dict = model_to_dict(created_user)
 		user_dict.pop('password')
-		from app import make_token
+		from tokens import make_token
 		user_dict['token'] = make_token(created_user.id)
 	return jsonify(
 		data= user_dict,
@@ -49,7 +49,7 @@ def login():
 
 			login_user(user, remember=True)
 			user_dict.pop('password')
-			from app import make_token
+			from tokens import make_token
 			user_dict['token'] = make_token(user.id)
 			return jsonify(
 				data=user_dict,

@@ -6,7 +6,7 @@ from flask import Flask, jsonify, g, redirect, session, request
 from flask_cors import CORS
 from flask_login import LoginManager, login_user, current_user
 from flask_socketio import emit, join_room
-from itsdangerous import URLSafeTimedSerializer
+from tokens import make_token, decode_token
 from flask_dance.contrib.google import make_google_blueprint
 from flask_dance.consumer import oauth_authorized
 
@@ -29,19 +29,6 @@ if DEBUG:
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
-
-
-def make_token(user_id):
-    s = URLSafeTimedSerializer(app.secret_key)
-    return s.dumps(str(user_id), salt='auth')
-
-
-def decode_token(token):
-    s = URLSafeTimedSerializer(app.secret_key)
-    try:
-        return int(s.loads(token, salt='auth', max_age=60 * 60 * 24 * 30))
-    except Exception:
-        return None
 
 ALLOWED_ORIGINS = ['http://localhost:3000', 'http://localhost:3001', FRONTEND_URL]
 
