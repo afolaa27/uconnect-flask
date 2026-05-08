@@ -156,7 +156,7 @@ def after_request(response):
 
 @app.route('/health')
 def health():
-    return jsonify(status='ok'), 200
+    return '', 204
 
 
 if os.environ.get('DATABASE_URL'):
